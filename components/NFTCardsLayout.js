@@ -8,6 +8,11 @@ export const NFTCard = ({ children }) => (
   </div>
 );
 
-export const NFTCardImage = ({ src, alt }) => (
-  <img src={src} alt={alt} className='rounded-2xl cursor-pointer mb-4' />
+export const NFTCardImage = ({ src, alt, onClick }) => (
+  <img
+    src={src}
+    alt={alt}
+    onClick={onClick}
+    className='rounded-2xl cursor-pointer mb-4 w-full'
+  />
 );

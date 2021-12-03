@@ -19,6 +19,8 @@ export const AppState = ({ children }) => {
   const [market, _setMarket] = useState();
   const [address, _setAddress] = useState();
 
+  const [selectedNFT, setSelectedNFT] = useState();
+
   useEffect(() => {
     _resetUI();
     window.ethereum.on('accountsChanged', _resetUI);
@@ -95,6 +97,8 @@ export const AppState = ({ children }) => {
         setAlert,
         setLoading,
         contractsLoaded,
+        selectedNFT,
+        setSelectedNFT,
       }}
     >
       {children}
