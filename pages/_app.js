@@ -31,10 +31,10 @@ function Marketplace({ Component, pageProps }) {
           {routes.map((route) => (
             <Link href={route.route} key={route.route}>
               <a
-                className={`py-2 px-4 hover:bg-blue-50 rounded-t-lg ${
+                className={`py-2 mr-6 font-medium ${
                   router.route === route.route
-                    ? 'border-b-2 border-blue-600 text-blue-600 font-medium'
-                    : 'text-gray-500'
+                    ? 'border-b-2 border-blue-600 text-blue-600'
+                    : 'text-gray-400'
                 }`}
               >
                 {route.name}

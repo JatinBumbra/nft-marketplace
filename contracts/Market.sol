@@ -52,7 +52,7 @@ contract Market is ReentrancyGuard {
         uint256 tokenId,
         uint256 price 
     ) public payable nonReentrant {
-        require(price > 0, 'Price must be atleast 1 wei');
+        require(price >= 1 ether, 'Price must be atleast 1 ETH');
         require(msg.value == listingPrice, 'Please provide listing price value');
         // Create an ID for the NFT
         _itemIds.increment();

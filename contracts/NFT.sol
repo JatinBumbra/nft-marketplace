@@ -12,7 +12,7 @@ contract NFT is ERC721URIStorage {
     address contractAddress;
 
     // Make the contract belong to the marketplace
-    constructor(address marketplace) ERC721("MetaVerse", "METI") {
+    constructor(address marketplace) ERC721("NFT Verse", "NFTV") {
         contractAddress = marketplace;
     }
 
