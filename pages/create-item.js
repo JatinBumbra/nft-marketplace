@@ -1,3 +1,7 @@
+import { useAppContext } from '../state';
+
 export default function CreateItem() {
-  return null;
+  const { nft, market, loading, setLoading } = useAppContext();
+
+  return <></>;
 }
