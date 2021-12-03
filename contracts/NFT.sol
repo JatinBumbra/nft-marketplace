@@ -12,20 +12,20 @@ contract NFT is ERC721URIStorage {
     address contractAddress;
 
     // Make the contract belong to the marketplace
-    constructor(address marketplace) ERC721("MetaVerse","METI") {
+    constructor(address marketplace) ERC721("MetaVerse", "METI") {
         contractAddress = marketplace;
     }
 
-    function createNFT(string memory tokenURI) public returns(uint) {
+    function createNFT(string memory tokenURI) public returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
 
         // Mint the NFT and make the creator the owner of the NFT
         _mint(msg.sender, newItemId);
-        // Set's tokenUI as the unique location address for the NFT
+        // Set's tokenURI as the unique location address for the NFT
         _setTokenURI(newItemId, tokenURI);
         // Approve marketplace to sell the NFT on creator's behalf
-        setApprovalForAll(contractAddress,true);
+        setApprovalForAll(contractAddress, true);
         return newItemId;
     }
 }

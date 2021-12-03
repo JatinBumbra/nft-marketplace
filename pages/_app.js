@@ -1,24 +1,46 @@
 import '../styles/globals.css';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 function Marketplace({ Component, pageProps }) {
+  const router = useRouter();
+
+  const routes = [
+    {
+      route: '/',
+      name: 'Home',
+    },
+    {
+      route: '/create-item',
+      name: 'Sell Digital Asset',
+    },
+    {
+      route: '/my-assets',
+      name: 'My Digital Assets',
+    },
+    {
+      route: '/creator-dashboard',
+      name: 'Creator Dashboard',
+    },
+  ];
   return (
     <div>
-      <nav className='border-b p-6'>
-        <p className='text-4xl font-bold'>Metaverse Marketplace</p>
+      <nav className='p-6 border-b pb-0'>
+        <p className='text-4xl font-semibold'>NFTVerse Marketplace</p>
         <div className='flex mt-4'>
-          <Link href='/'>
-            <a className='mr-4 text-pink-500'>Home</a>
-          </Link>
-          <Link href='/create-item'>
-            <a className='mr-6 text-pink-500'>Sell Digital Asset</a>
-          </Link>
-          <Link href='/my-assets'>
-            <a className='mr-6 text-pink-500'>My Digital Assets</a>
-          </Link>
-          <Link href='/creator-dashboard'>
-            <a className='mr-6 text-pink-500'>Creator Dashboard</a>
-          </Link>
+          {routes.map((route) => (
+            <Link href={route.route} key={route.route}>
+              <a
+                className={`py-2 px-4 hover:bg-blue-50 rounded-t-lg ${
+                  router.route === route.route
+                    ? 'border-b-2 border-blue-600 text-blue-600 font-medium'
+                    : 'text-gray-500'
+                }`}
+              >
+                {route.name}
+              </a>
+            </Link>
+          ))}
         </div>
       </nav>
       <Component {...pageProps} />
