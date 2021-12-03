@@ -41,7 +41,7 @@ export default function ScreenLayout({ children }) {
       <p className='bg-yellow-800'></p>
       {alert.message ? (
         <div
-          className={`bg-${alert.color}-500 text-white p-3 pl-6 absolute m-4 rounded-md left-1/2 -translate-x-1/2 flex justify-between items-center z-50 shadow-xl`}
+          className={`bg-${alert.color}-500 text-white p-3 pl-6 fixed m-4 rounded-md left-1/2 -translate-x-1/2 flex justify-between items-center z-50 shadow-xl`}
         >
           <p>{alert.message}</p>
           <button
@@ -52,8 +52,8 @@ export default function ScreenLayout({ children }) {
           </button>
         </div>
       ) : null}
-      <header className='border-b-2 pt-6 px-12'>
-        <div className='custom-container flex justify-between'>
+      <header className='border-b-2'>
+        <div className='custom-container pt-6 px-12 flex justify-between'>
           <div>
             <p className='text-4xl font-semibold'>NFTVerse Marketplace</p>
             <nav className='flex mt-4'>
@@ -74,7 +74,7 @@ export default function ScreenLayout({ children }) {
           </div>
         </div>
       </header>
-      <main className='custom-container'>{children}</main>
+      <main className='custom-container py-6 px-12'>{children}</main>
     </>
   );
 }

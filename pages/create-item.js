@@ -1,7 +1,88 @@
+import { useState } from 'react';
+import Button from '../components/Button';
+import Input from '../components/Input';
 import { useAppContext } from '../state';
 
 export default function CreateItem() {
-  const { nft, market, loading, setLoading } = useAppContext();
+  const { nft, market, loading, setLoading, setAlert } = useAppContext();
 
-  return <></>;
+  const [form, setForm] = useState({
+    title: {
+      label: 'Title',
+      value: '',
+    },
+    description: {
+      label: 'Description',
+      value: '',
+    },
+    price: {
+      label: 'Price (in ETH)',
+      value: '',
+      type: 'number',
+      min: 1,
+    },
+  });
+  const [file, setFile] = useState();
+  const [fileData, setFileData] = useState();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!Object.values(form).every((en) => en.value))
+      return setAlert({
+        color: 'red',
+        message: 'Please fill in all the fields',
+      });
+  };
+
+  const handleChange = (e) => {
+    setForm((prev) => {
+      prev[e.target.name].value = e.target.value;
+      return { ...prev };
+    });
+  };
+  const handleFile = (e) => {
+    const fl = e.target.files[0];
+    setFile(fl);
+    const reader = new FileReader();
+    reader.onload = (data) => {
+      setFileData(data.target.result);
+    };
+    reader.readAsDataURL(fl);
+  };
+
+  return (
+    <section className='grid grid-cols-2 gap-16 my-4'>
+      <form onSubmit={handleSubmit}>
+        {Object.entries(form).map(([key, value]) => (
+          <Input
+            name={key}
+            key={key}
+            type={value.type}
+            value={value.value}
+            label={value.label}
+            required={value.required}
+            onChange={handleChange}
+          />
+        ))}
+        <div className='pb-3' />
+        <Button>Mint NFT</Button>
+        <p className='text-sm mt-4 text-gray-500'>
+          (Listing an item costs 0.025 ETH and min price for an item is 1 ETH)
+        </p>
+      </form>
+      <div className=''>
+        <h2 className='text-xl mb-2'>NFT Image</h2>
+        <div className=''>
+          {fileData ? (
+            <img src={fileData} className='rounded-3xl mb-4' />
+          ) : null}
+          <input
+            type='file'
+            className='cursor-pointer bg-gray-100 p-4 rounded-lg w-full border border-gray-300'
+            onChange={handleFile}
+          />
+        </div>
+      </div>
+    </section>
+  );
 }
