@@ -2,9 +2,10 @@ import { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { useAppContext } from '../state';
-import { create } from 'ipfs-http-client';
 
-const ipfs = create('http://localhost:5001');
+const options = {
+  Authorization: 'Bearer ' + process.env.NEXT_PUBLIC_API_KEY,
+};
 
 const __baseURL = 'https://ipfs.io/ipfs/';
 
@@ -29,7 +30,7 @@ export default function CreateItem() {
   const { address, nft, market, loading, setLoading, setAlert } =
     useAppContext();
 
-  const [form, setForm] = useState(__form);
+  const [form, setForm] = useState({ ...__form });
   const [file, setFile] = useState();
   const [fileData, setFileData] = useState();
 
@@ -42,12 +43,16 @@ export default function CreateItem() {
       });
     try {
       setLoading(true);
+      setAlert({ color: 'yellow', message: 'Uploading your NFT image' });
       // Upload the file to IPFS and obtain the image CID
-      let result = await ipfs.add(file, {
-        progress: (prog) => console.log(`received: ${prog}`),
-      });
-      let url = __baseURL + result.cid;
+      let result = await fetch('https://api.nft.storage/upload', {
+        method: 'POST',
+        body: file,
+        headers: options,
+      }).then((res) => res.json());
+      let url = __baseURL + result.value.cid;
       // Construct JSON metadata from form. Also add image URL to it
+      setAlert({ color: 'yellow', message: 'Uploading your NFT metadata' });
       const meta = JSON.stringify({
         title: form.title.value,
         description: form.description.value,
@@ -55,30 +60,38 @@ export default function CreateItem() {
         image: url,
       });
       // Upload metadata to IPFS
-      result = await ipfs.add(meta, {
-        progress: (prog) => console.log(`received: ${prog}`),
-      });
-      url = __baseURL + result.cid;
+      result = await fetch('https://api.nft.storage/upload', {
+        method: 'POST',
+        body: meta,
+        headers: options,
+      }).then((res) => res.json());
+      url = __baseURL + result.value.cid;
       // Create token with CID of uploaded metadata as tokenURI
+      setAlert({
+        color: 'yellow',
+        message: 'Confirm the transaction to mint your NFT token',
+      });
       result = await nft.methods.createNFT(url).send({ from: address });
       const tokenId = Number(result.events.Transfer.returnValues.tokenId);
       // Add the created token to the market item for sale
-      const listingPrice = (
-        await market.methods.getListingPrice().call()
-      ).toString();
+      const listingPrice = await market.methods.getListingPrice().call();
+      setAlert({
+        color: 'yellow',
+        message: 'Provide the listing price to add your NFT to the marketplace',
+      });
       result = await market.methods
         .createMarketItem(
           nft._address,
           tokenId,
           window.web3.utils.toWei(form.price.value)
         )
-        .send({ from: address, value: listingPrice });
-      setForm(__form);
+        .send({ from: address, value: listingPrice.toString() });
+      setForm({ ...__form });
       setFile();
       setFileData();
       setAlert({
         color: 'green',
-        message: 'NFT created',
+        message: 'NFT created successfully',
       });
     } catch (error) {
       setAlert({

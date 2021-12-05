@@ -9,15 +9,18 @@ import { useAppContext } from '../state';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const { market, setSelectedNFT, fetchMarketData } = useAppContext();
+  const { market, setSelectedNFT, fetchMarketData, setLoading, setAlert } =
+    useAppContext();
   const [data, setData] = useState();
 
   useEffect(() => {
+    setLoading(true);
     const condition = (item) => item.sold || item.tokenId == 0;
     market &&
-      fetchMarketData(market.methods.fetchMarketItems, condition).then((data) =>
-        setData(data)
-      );
+      fetchMarketData(market.methods.fetchMarketItems, condition)
+        .then((data) => setData(data))
+        .catch((err) => setAlert({ color: 'red', message: err.message }))
+        .finally(setLoading);
   }, [market]);
 
   return (

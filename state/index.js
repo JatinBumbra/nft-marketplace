@@ -2,9 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import NFTCompiled from '../contracts/build/NFT.json';
 import MarketCompiled from '../contracts/build/Market.json';
-import { create } from 'ipfs-http-client';
-
-const ipfs = create('http://localhost:5001');
 
 export const AppContext = createContext();
 
@@ -71,7 +68,7 @@ export const AppState = ({ children }) => {
       // If either contracts are not loaded, then throw
       if (!nftData || !marketData)
         throw new Error(
-          'Unable to load contracts. Please switch to mainnet, ropsten or rinkiby networks'
+          'Unable to load contracts. Please switch to ropsten network or setup a local Ganache node'
         );
       _setContractsLoaded(true);
     } catch (error) {
@@ -91,24 +88,21 @@ export const AppState = ({ children }) => {
 
   const fetchMarketData = (method, condition) =>
     new Promise(async (resolve, reject) => {
-      const decoder = new TextDecoder();
-      const items = await method().call({ from: address });
-      const data = [];
-      await Promise.all(
-        items.map(async (item) => {
-          if (condition && condition(item)) return;
-          // if (item.sold || item.tokenId == 0) return;
-          const url = await nft.methods.tokenURI(item.tokenId).call();
-          const cid = url.slice(url.length - 46);
-          const arr = [];
-          for await (const chunk of ipfs.cat(cid)) {
-            arr.push(chunk);
-          }
-          const buf = Buffer.concat(arr);
-          data.push({ ...item, ...JSON.parse(decoder.decode(buf)) });
-        })
-      );
-      resolve(data);
+      try {
+        const items = await method().call({ from: address });
+        const data = [];
+        await Promise.all(
+          items.map(async (item) => {
+            if (condition && condition(item)) return;
+            const url = await nft.methods.tokenURI(item.tokenId).call();
+            const result = await fetch(url).then((res) => res.json());
+            data.push({ ...item, ...result });
+          })
+        );
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
     });
 
   return (
