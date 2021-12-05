@@ -1,8 +1,10 @@
+import { useRouter } from 'next/dist/client/router';
 import { useAppContext } from '../state';
 import Button from './Button';
 import { NFTCardImage } from './NFTCardsLayout';
 
 export default function NFTPreview() {
+  const router = useRouter();
   const { selectedNFT, setSelectedNFT } = useAppContext();
 
   return selectedNFT ? (
@@ -26,7 +28,9 @@ export default function NFTPreview() {
                 {selectedNFT.price} ETH
               </span>
             </div>
-            <Button className='py-4'>Buy Now</Button>
+            {router.route === '/' ? (
+              <Button className='py-4'>Buy Now</Button>
+            ) : null}
           </div>
         </div>
       </div>

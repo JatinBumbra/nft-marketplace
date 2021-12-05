@@ -19,25 +19,30 @@ export default function MyAssets() {
       const decoder = new TextDecoder();
       const items = await market.methods.fetchMyNFTS().call({ from: address });
       const data = [];
-      items.forEach(async (item, i) => {
-        const url = await nft.methods.tokenURI(item.tokenId).call();
-        const cid = url.slice(url.length - 46);
-        const arr = [];
-        for await (const chunk of ipfs.cat(cid)) {
-          arr.push(chunk);
-        }
-        const buf = Buffer.concat(arr);
-        data.push(JSON.parse(decoder.decode(buf)));
-        if (i === items.length - 1) {
-          setData(data);
-        }
-      });
+      await Promise.all(
+        items.map(async (item, i) => {
+          const url = await nft.methods.tokenURI(item.tokenId).call();
+          const cid = url.slice(url.length - 46);
+          const arr = [];
+          for await (const chunk of ipfs.cat(cid)) {
+            arr.push(chunk);
+          }
+          const buf = Buffer.concat(arr);
+          data.push({ ...item, ...JSON.parse(decoder.decode(buf)) });
+        })
+      );
+      setData(data);
     };
     market && init();
   }, [market]);
 
   return (
-    <NFTCardsLayout data={data}>
+    <NFTCardsLayout
+      data={data}
+      message={
+        "No NFTs purchased by you. Move to 'Home' page to buy some NFTs for your collection"
+      }
+    >
       {data &&
         data.map((item, index) => (
           <NFTCard key={index}>

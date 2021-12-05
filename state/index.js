@@ -2,6 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import NFTCompiled from '../contracts/build/NFT.json';
 import MarketCompiled from '../contracts/build/Market.json';
+import { create } from 'ipfs-http-client';
+
+const ipfs = create('http://localhost:5001');
 
 export const AppContext = createContext();
 
