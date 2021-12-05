@@ -27,6 +27,10 @@ export default function ScreenLayout({ children }) {
 
   return (
     <>
+      <p className='py-1 px-6 bg-yellow-500 text-white text-sm'>
+        This app is only a demo marketplace. The Flags are a national property
+        to respective countries and are here only for testing purposes.
+      </p>
       <p className='bg-red-500'></p>
       <p className='bg-red-600'></p>
       <p className='bg-red-700'></p>

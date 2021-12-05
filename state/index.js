@@ -68,7 +68,7 @@ export const AppState = ({ children }) => {
       // If either contracts are not loaded, then throw
       if (!nftData || !marketData)
         throw new Error(
-          'Unable to load contracts. Please switch to ropsten network or setup a local Ganache node'
+          'Unable to load contracts. Please switch to Rinkeby network or setup a local Ganache node'
         );
       _setContractsLoaded(true);
     } catch (error) {

@@ -12,7 +12,13 @@ export default function NFTPreview() {
     try {
       await market.methods
         .createMarketSale(item.nftContract, item.tokenId)
-        .send({ from: address, value: window.web3.utils.toWei(item.price) });
+        .send({ from: address, value: window.web3.utils.toWei(item.price) })
+        .on('transactionHash', (tx) => {
+          setAlert({
+            color: 'green',
+            message: `Transaction successful: ${tx}`,
+          });
+        });
       setAlert({
         color: 'green',
         message: 'Purchase successful',

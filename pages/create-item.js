@@ -71,7 +71,21 @@ export default function CreateItem() {
         color: 'yellow',
         message: 'Confirm the transaction to mint your NFT token',
       });
-      result = await nft.methods.createNFT(url).send({ from: address });
+      result = await nft.methods
+        .createNFT(url)
+        .send({ from: address })
+        .on('transactionHash', (tx) => {
+          setAlert({
+            color: 'green',
+            message: `Transaction successful: ${tx}`,
+          });
+        })
+        .on('confirmation', () => {
+          setAlert({
+            color: 'green',
+            message: `Transaction confirmed`,
+          });
+        });
       const tokenId = Number(result.events.Transfer.returnValues.tokenId);
       // Add the created token to the market item for sale
       const listingPrice = await market.methods.getListingPrice().call();
@@ -85,7 +99,13 @@ export default function CreateItem() {
           tokenId,
           window.web3.utils.toWei(form.price.value)
         )
-        .send({ from: address, value: listingPrice.toString() });
+        .send({ from: address, value: listingPrice.toString() })
+        .on('transactionHash', (tx) => {
+          setAlert({
+            color: 'green',
+            message: `Transaction successful: ${tx}`,
+          });
+        });
       setForm({ ...__form });
       setFile();
       setFileData();
@@ -136,7 +156,8 @@ export default function CreateItem() {
         <div className='pb-3' />
         <Button disabled={loading}>Mint NFT</Button>
         <p className='text-sm mt-4 text-gray-500'>
-          (Listing an item costs 0.025 ETH and min price for an item is 1 ETH)
+          (Listing an item costs 0.001 ETH and min price for an item is 0.01
+          ETH)
         </p>
       </form>
       <div>

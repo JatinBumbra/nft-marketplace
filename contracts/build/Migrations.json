@@ -2308,15 +2308,27 @@
     "version": "0.8.10+commit.fc410830.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0x0158a1d5053820FaB254066B45d22B14D24e1f20",
+      "transactionHash": "0x114560a886d9343a27ef024eec3cd62332a4e110fa0107e4d6f87b298b21279f"
+    },
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x175790E96Dc27242dd84df93FCF39D4bAD2FF63C",
+      "transactionHash": "0x0fd3e697dd10fefc80d61801f1e3924f4bffb2b2ba2277fb5cfb42e62c3e66bd"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x36F5cf041726f3659c6e4859eC3666f9ab7D069F",
-      "transactionHash": "0x6b246bed685249ba0b325c4a0673ae487c0e544b7099382c2ab69d79a0d8f3e8"
+      "address": "0x3F75D9faD3fA2C6be81167e1776eA0db8F2f4a6F",
+      "transactionHash": "0x214295d1ec90374196dac933a632db1f5a109abf374facd9c97bba17a761c651"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-05T16:37:03.184Z",
+  "updatedAt": "2021-12-05T18:39:54.221Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
