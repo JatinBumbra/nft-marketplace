@@ -1,3 +1,4 @@
+import { useRouter } from 'next/dist/client/router';
 import { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -27,6 +28,8 @@ const __form = {
 };
 
 export default function CreateItem() {
+  const router = useRouter();
+
   const { address, nft, market, loading, setLoading, setAlert } =
     useAppContext();
 
@@ -77,13 +80,7 @@ export default function CreateItem() {
         .on('transactionHash', (tx) => {
           setAlert({
             color: 'green',
-            message: `Transaction successful: ${tx}`,
-          });
-        })
-        .on('confirmation', () => {
-          setAlert({
-            color: 'green',
-            message: `Transaction confirmed`,
+            message: `Transaction successful: ${tx}.\nPlease wait...`,
           });
         });
       const tokenId = Number(result.events.Transfer.returnValues.tokenId);
@@ -103,7 +100,7 @@ export default function CreateItem() {
         .on('transactionHash', (tx) => {
           setAlert({
             color: 'green',
-            message: `Transaction successful: ${tx}`,
+            message: `Transaction successful: ${tx}\n.Please wait...`,
           });
         });
       setForm({ ...__form });
@@ -113,6 +110,7 @@ export default function CreateItem() {
         color: 'green',
         message: 'NFT created successfully',
       });
+      router.push('/');
     } catch (error) {
       setAlert({
         color: 'red',
