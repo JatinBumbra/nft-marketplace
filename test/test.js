@@ -35,7 +35,7 @@ describe('Marketplace Functionality', () => {
         });
       });
 
-      describe('createToken()', () => {
+      describe('createNFT()', () => {
         it('creates an NFT item', async () => {
           result = await nft.createNFT(item1uri, { from: creator });
           item1index = result.logs[0].args[2].toString();
@@ -66,7 +66,10 @@ describe('Marketplace Functionality', () => {
               nft.address,
               item1index,
               price,
-              { from: creator, value: listingPrice }
+              {
+                from: creator,
+                value: listingPrice,
+              }
             );
             expect((await nft.ownerOf(item1index)).toString()).equal(
               market.address

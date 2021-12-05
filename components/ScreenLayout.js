@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAppContext } from '../state';
 
@@ -28,12 +27,6 @@ export default function ScreenLayout({ children }) {
 
   return (
     <>
-      <Head>
-        <link
-          href='https://fonts.googleapis.com/icon?family=Material+Icons'
-          rel='stylesheet'
-        />
-      </Head>
       <p className='bg-red-500'></p>
       <p className='bg-red-600'></p>
       <p className='bg-red-700'></p>

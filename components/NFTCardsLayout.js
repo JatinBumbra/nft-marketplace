@@ -13,6 +13,6 @@ export const NFTCardImage = ({ src, alt, onClick }) => (
     src={src}
     alt={alt}
     onClick={onClick}
-    className='rounded-2xl cursor-pointer mb-4 w-full'
+    className={`rounded-2xl ${onClick ? 'cursor-pointer' : ''} mb-4 w-full`}
   />
 );
