@@ -38,18 +38,17 @@ export default function Home() {
   }, [market]);
 
   return (
-    <NFTCardsLayout>
-      {data || data?.length
-        ? data.map((item, index) => (
-            <NFTCard key={index}>
-              <NFTCardImage
-                src={item.image}
-                onClick={() => setSelectedNFT(item)}
-              />
-              <Button>Buy for {item.price} ETH</Button>
-            </NFTCard>
-          ))
-        : null}
+    <NFTCardsLayout data={data}>
+      {data &&
+        data.map((item, index) => (
+          <NFTCard key={index}>
+            <NFTCardImage
+              src={item.image}
+              onClick={() => setSelectedNFT(item)}
+            />
+            <Button>Buy for {item.price} ETH</Button>
+          </NFTCard>
+        ))}
       <NFTPreview />
     </NFTCardsLayout>
   );

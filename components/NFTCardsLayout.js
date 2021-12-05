@@ -1,5 +1,7 @@
-export const NFTCardsLayout = ({ children }) => (
-  <div className='grid grid-cols-4 gap-4'>{children}</div>
+export const NFTCardsLayout = ({ children, data }) => (
+  <div className='grid grid-cols-4 gap-4'>
+    {data || data?.length ? children : null}
+  </div>
 );
 
 export const NFTCard = ({ children }) => (
