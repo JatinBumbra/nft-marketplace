@@ -5,7 +5,26 @@ import { NFTCardImage } from './NFTCardsLayout';
 
 export default function NFTPreview() {
   const router = useRouter();
-  const { selectedNFT, setSelectedNFT } = useAppContext();
+  const { market, address, selectedNFT, setSelectedNFT, setAlert } =
+    useAppContext();
+
+  const createMarketSale = async (item) => {
+    try {
+      await market.methods
+        .createMarketSale(item.nftContract, item.tokenId)
+        .send({ from: address, value: window.web3.utils.toWei(item.price) });
+      setAlert({
+        color: 'green',
+        message: 'Purchase successful',
+      });
+      setSelectedNFT();
+    } catch (error) {
+      setAlert({
+        color: 'red',
+        message: error.message,
+      });
+    }
+  };
 
   return selectedNFT ? (
     <div className='fixed top-0 left-0 h-screen w-screen'>
@@ -23,13 +42,26 @@ export default function NFTPreview() {
             <h1 className='text-4xl font-semibold mb-2'>{selectedNFT.title}</h1>
             <p className='text-gray-500'>{selectedNFT.description}</p>
             <div className='flex justify-between items-center my-8 text-2xl justify-self-end'>
-              <span className='font-medium text-gray-700'>Price</span>
+              <span className='font-medium text-gray-700'>
+                {selectedNFT?.owner === address ? 'Bought for' : 'Price'}
+              </span>
               <span className='font-bold text-4xl'>
                 {selectedNFT.price} ETH
               </span>
             </div>
             {router.route === '/' ? (
-              <Button className='py-4'>Buy Now</Button>
+              <Button
+                className='py-4'
+                disabled={selectedNFT?.seller === address}
+                onClick={() => createMarketSale(selectedNFT)}
+              >
+                Buy Now
+              </Button>
+            ) : null}
+            {selectedNFT?.seller === address ? (
+              <div className='p-4 text-center mt-4 rounded-xl bg-gray-100'>
+                <p>On sale by you</p>
+              </div>
             ) : null}
           </div>
         </div>

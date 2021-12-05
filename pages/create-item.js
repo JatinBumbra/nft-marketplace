@@ -61,7 +61,6 @@ export default function CreateItem() {
       url = __baseURL + result.cid;
       // Create token with CID of uploaded metadata as tokenURI
       result = await nft.methods.createNFT(url).send({ from: address });
-      console.log(result);
       const tokenId = Number(result.events.Transfer.returnValues.tokenId);
       // Add the created token to the market item for sale
       const listingPrice = (
@@ -74,10 +73,14 @@ export default function CreateItem() {
           window.web3.utils.toWei(form.price.value)
         )
         .send({ from: address, value: listingPrice });
-      console.log(result);
       setForm(__form);
+      setFile();
+      setFileData();
+      setAlert({
+        color: 'green',
+        message: 'NFT created',
+      });
     } catch (error) {
-      console.log(error);
       setAlert({
         color: 'red',
         message: error.message,
@@ -105,7 +108,7 @@ export default function CreateItem() {
 
   return (
     <section className='grid grid-cols-2 gap-16 my-4'>
-      <div>
+      <form onSubmit={handleSubmit}>
         {Object.entries(form).map(([key, value]) => (
           <Input
             name={key}
@@ -118,13 +121,11 @@ export default function CreateItem() {
           />
         ))}
         <div className='pb-3' />
-        <Button disabled={loading} onClick={handleSubmit}>
-          Mint NFT
-        </Button>
+        <Button disabled={loading}>Mint NFT</Button>
         <p className='text-sm mt-4 text-gray-500'>
           (Listing an item costs 0.025 ETH and min price for an item is 1 ETH)
         </p>
-      </div>
+      </form>
       <div>
         <h2 className='text-xl mb-2'>NFT Image</h2>
         <div>

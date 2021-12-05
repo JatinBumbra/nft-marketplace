@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 const ipfs = create('http://localhost:5001');
 
 export default function Home() {
-  const { address, nft, market, setSelectedNFT, setAlert } = useAppContext();
+  const { nft, market, setSelectedNFT } = useAppContext();
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -38,35 +38,13 @@ export default function Home() {
     market && init();
   }, [market]);
 
-  const createMarketSale = async (item) => {
-    try {
-      await market.methods
-        .createMarketSale(item.nftContract, item.tokenId)
-        .send({ from: address, value: window.web3.utils.toWei(item.price) });
-      setAlert({
-        color: 'green',
-        message: 'Purchase successful',
-      });
-    } catch (error) {
-      setAlert({
-        color: 'red',
-        message: error.message,
-      });
-    }
-  };
-
   return (
     <NFTCardsLayout data={data} message={'No NFTs for sale'}>
       {data &&
         data.map((item, index) => (
           <NFTCard key={index}>
-            <NFTCardImage
-              src={item.image}
-              onClick={() => setSelectedNFT(item)}
-            />
-            <Button onClick={() => createMarketSale(item)}>
-              Buy for {item.price} ETH
-            </Button>
+            <NFTCardImage src={item.image} />
+            <Button onClick={() => setSelectedNFT(item)}>Click to BUY</Button>
           </NFTCard>
         ))}
       <NFTPreview />
