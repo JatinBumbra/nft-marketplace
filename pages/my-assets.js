@@ -5,35 +5,15 @@ import {
 } from '../components/NFTCardsLayout';
 import NFTPreview from '../components/NFTPreview';
 import { useAppContext } from '../state';
-import { create } from 'ipfs-http-client';
 import { useEffect, useState } from 'react';
 
-const ipfs = create('http://localhost:5001');
-
 export default function MyAssets() {
-  const { address, nft, market, setSelectedNFT } = useAppContext();
+  const { market, setSelectedNFT, fetchMarketData } = useAppContext();
   const [data, setData] = useState();
 
   useEffect(() => {
-    const init = async () => {
-      const decoder = new TextDecoder();
-      const items = await market.methods.fetchMyNFTS().call({ from: address });
-      const data = [];
-      await Promise.all(
-        items.map(async (item, i) => {
-          const url = await nft.methods.tokenURI(item.tokenId).call();
-          const cid = url.slice(url.length - 46);
-          const arr = [];
-          for await (const chunk of ipfs.cat(cid)) {
-            arr.push(chunk);
-          }
-          const buf = Buffer.concat(arr);
-          data.push({ ...item, ...JSON.parse(decoder.decode(buf)) });
-        })
-      );
-      setData(data);
-    };
-    market && init();
+    market &&
+      fetchMarketData(market.methods.fetchMyNFTS).then((data) => setData(data));
   }, [market]);
 
   return (

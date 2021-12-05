@@ -89,6 +89,28 @@ export const AppState = ({ children }) => {
     _loadWeb3().then(_loadBlockchainData);
   };
 
+  const fetchMarketData = (method, condition) =>
+    new Promise(async (resolve, reject) => {
+      const decoder = new TextDecoder();
+      const items = await method().call({ from: address });
+      const data = [];
+      await Promise.all(
+        items.map(async (item) => {
+          if (condition && condition(item)) return;
+          // if (item.sold || item.tokenId == 0) return;
+          const url = await nft.methods.tokenURI(item.tokenId).call();
+          const cid = url.slice(url.length - 46);
+          const arr = [];
+          for await (const chunk of ipfs.cat(cid)) {
+            arr.push(chunk);
+          }
+          const buf = Buffer.concat(arr);
+          data.push({ ...item, ...JSON.parse(decoder.decode(buf)) });
+        })
+      );
+      resolve(data);
+    });
+
   return (
     <AppContext.Provider
       value={{
@@ -102,6 +124,7 @@ export const AppState = ({ children }) => {
         contractsLoaded,
         selectedNFT,
         setSelectedNFT,
+        fetchMarketData,
       }}
     >
       {children}
